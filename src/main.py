@@ -4,11 +4,11 @@ import soundfile as sf
 from placements import kick_placements, snare_placements, hat_placements
 
 # load instrumental
-input_file = '89_C_GlowingGuitar_SP'
+input_file = '140_nick_mira_2'
 x, srate = librosa.load('../samples/' + input_file + '.wav')
 
 # tried to pick drum samples that would go together.. so kick1, snare1, hat1 should sound good together
-drum_pack = 1
+drum_pack = 2
 
 # load drum samples
 kick, sr = librosa.load('../samples/drums/kicks/kick{0}.wav'.format(drum_pack))
@@ -16,18 +16,22 @@ snare, sr = librosa.load('../samples/drums/snares/snare{0}.wav'.format(drum_pack
 hat, sr = librosa.load('../samples/drums/hats/hat{0}.wav'.format(drum_pack))
 
 # perform beat tracking alg
-tempo, beat_times = librosa.beat.beat_track(x, sr=sr, units='samples')
+tempo, drum_indices = librosa.beat.beat_track(x, sr=sr, units='samples')
+print('Estimated Tempo: ', tempo)
 
-# convert seconds to frames
-drum_indices = beat_times
+# if tempo > 125, half speed it (maybe a good idea?)
+if tempo > 125:
+    drum_indices = [value for (i, value) in enumerate(drum_indices) if i % 2 == 0]
 
-# TESTING
+# find quarter notes
 quarters = []
+
+if drum_indices[0] > 10000:
+    quarters.append(np.linspace(0, drum_indices[0], 4, endpoint=False).tolist())
+
 for i in range(len(drum_indices) - 1):
     quarters.append(np.linspace(drum_indices[i], drum_indices[i + 1], 4, endpoint=False).tolist())
 quarters = [item for sublist in quarters for item in sublist]
-print(quarters)
-print(drum_indices)
 
 # calculate drum placements
 kick_indices = kick_placements(quarters)
@@ -68,4 +72,4 @@ for i in hat_indices:
 
 output = x + (kick_volume * kick_track) + (snare_volume * snare_track) + (hat_volume * hat_track)
 
-sf.write('../output/output.wav', x + output, srate, 'PCM_24')
+sf.write('../output/' + input_file + '-output.wav', x + output, srate, 'PCM_24')
