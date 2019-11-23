@@ -29,9 +29,12 @@ def gabi_run(input_file, drum_pack):
     kick_track = create_drum_track(sample, kick, kick_indices)
     snare_track = create_drum_track(sample, snare, snare_indices)
     hat_track = create_drum_track(sample, hat, hat_indices)
-
+    
+    sample = sample.astype(np.float32) / 32767.0 
+    # reduce values of sample to prevent clipping
+    sample = (0.5 / max(sample)) * sample 
     output = sample + (kick_volume * kick_track) + (snare_volume * snare_track) + (hat_volume * hat_track)
-
+    
     output_file_name = input_file + '-output.wav'
     sf.write('../../output/' + output_file_name, sample + output, srate, 'PCM_24')
     print('Output file ' + output_file_name + ' can be found in the output folder')
