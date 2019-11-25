@@ -98,7 +98,7 @@ class Interface:
     try:
       name = fd.askopenfilename(
         initialdir=".",
-        filetypes =(("Text File", "*.txt"),("All Files","*.*")),
+        filetypes =(("Audio Sample", "*.wav"),("All Files","*.*")),
         title = "Choose an audio file."
       )
     except:
@@ -142,16 +142,16 @@ class Interface:
               dsb.on = False
         if self.load_kick_button.rect.collidepoint((x,y)):
           #self.load_kick_button.blit
-          x = self.OpenFile()
-          print(x)
+          self.kick_sample_name = self.OpenFile()
+          print(self.kick_sample_name)
         if self.load_snare_button.rect.collidepoint((x,y)):
           #self.load_snare_button.blit
-          x = self.OpenFile()
-          print(x)
+          self.snare_sample_name = self.OpenFile()
+          print(self.snare_sample_name)
         if self.load_hat_button.rect.collidepoint((x,y)):
           #self.load_hat_button.blit
-          x = self.OpenFile()
-          print(x)
+          self.hat_sample_name = self.OpenFile()
+          print(self.hat_sample_name)
         
         if not self.setDoubleClick:
           self.setDoubleClick = True
