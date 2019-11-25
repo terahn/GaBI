@@ -75,7 +75,9 @@ class Interface:
       kick_button = ToggleButton(DPAT_B_WIDTH, DPAT_B_HEIGHT, 380+(b*(DPAT_B_WIDTH+5)), 220)
       self.drum_seq_buttons.append(kick_button)
     
-    self.load_sample_button = PressButton(60, 60, 115, 350)
+    self.load_snare_button = PressButton(60, 60, 115, 350)
+    self.load_kick_button = PressButton(60, 60, 10, 350)
+    self.load_hat_button = PressButton(60, 60, 225, 350)
     
     
     # ------- audio stuff ------
@@ -138,8 +140,16 @@ class Interface:
             else:
               dsb.image.blit(dsb.sheet, ( 0 - 0*DPAT_B_WIDTH, 0 - 0*DPAT_B_HEIGHT ) )
               dsb.on = False
-        if self.load_sample_button.rect.collidepoint((x,y)):
-          #self.load_sample_button.blit
+        if self.load_kick_button.rect.collidepoint((x,y)):
+          #self.load_kick_button.blit
+          x = self.OpenFile()
+          print(x)
+        if self.load_snare_button.rect.collidepoint((x,y)):
+          #self.load_snare_button.blit
+          x = self.OpenFile()
+          print(x)
+        if self.load_hat_button.rect.collidepoint((x,y)):
+          #self.load_hat_button.blit
           x = self.OpenFile()
           print(x)
         
@@ -188,7 +198,9 @@ class Interface:
     self.screen.blit(self.image, (0,0))
     for dsb in self.drum_seq_buttons:
       self.screen.blit(dsb.image, (dsb.rect.x, dsb.rect.y))
-    self.screen.blit(self.load_sample_button.image, (self.load_sample_button.rect.x, self.load_sample_button.rect.y))
+    self.screen.blit(self.load_kick_button.image, (self.load_kick_button.rect.x, self.load_kick_button.rect.y))
+    self.screen.blit(self.load_snare_button.image, (self.load_snare_button.rect.x, self.load_snare_button.rect.y))
+    self.screen.blit(self.load_hat_button.image, (self.load_hat_button.rect.x, self.load_hat_button.rect.y))
     pygame.display.flip()
   
   # 'main' loop:
