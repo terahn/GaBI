@@ -211,7 +211,7 @@ class Interface:
       self.input()
       self.update()
       self.draw()
-      self.audio_input()
+      #self.audio_input()
       
 
  
