@@ -9,6 +9,7 @@ from audio_input import *
 from app_constants import *
 from tkinter import *
 from tkinter import filedialog as fd
+from engine import gabi_run
 
 root = Tk()
 root.withdraw()
@@ -60,6 +61,13 @@ class Interface:
     self.background = BACKGROUND
     self.image = pygame.Surface( (768, 512), pygame.SRCALPHA )
     self.image.blit(self.background, ( 0,0 ) )
+
+    # placeholders
+    self.input_sample_name = '../samples/140_lofi_rhodes.wav'
+    self.kick_sample_name = '../samples/drums/kicks/kick1.wav'
+    self.snare_sample_name = '../samples/drums/snares/snare1.wav'
+    self.hat_sample_name = '../samples/drums/hats/hat1.wav'
+
     
     self.doubleClickCount = 0
     self.setDoubleClick = False
@@ -78,7 +86,8 @@ class Interface:
     self.load_snare_button = PressButton(60, 60, 115, 350)
     self.load_kick_button = PressButton(60, 60, 10, 350)
     self.load_hat_button = PressButton(60, 60, 225, 350)
-    
+    self.load_sample_button = PressButton(60, 60, 20, 70)
+    self.generate_button = PressButton(60, 60, 350, 370)
     
     # ------- audio stuff ------
     # output
@@ -140,6 +149,10 @@ class Interface:
             else:
               dsb.image.blit(dsb.sheet, ( 0 - 0*DPAT_B_WIDTH, 0 - 0*DPAT_B_HEIGHT ) )
               dsb.on = False
+        if self.load_sample_button.rect.collidepoint((x,y)):
+          #self.load_sample_button.blit
+          self.input_sample_name = self.OpenFile()
+          print(self.input_sample_name)
         if self.load_kick_button.rect.collidepoint((x,y)):
           #self.load_kick_button.blit
           self.kick_sample_name = self.OpenFile()
@@ -152,6 +165,10 @@ class Interface:
           #self.load_hat_button.blit
           self.hat_sample_name = self.OpenFile()
           print(self.hat_sample_name)
+
+        # generate button clicked
+        if self.generate_button.rect.collidepoint((x,y)):
+          self.generate()
         
         if not self.setDoubleClick:
           self.setDoubleClick = True
@@ -198,10 +215,22 @@ class Interface:
     self.screen.blit(self.image, (0,0))
     for dsb in self.drum_seq_buttons:
       self.screen.blit(dsb.image, (dsb.rect.x, dsb.rect.y))
+    self.screen.blit(self.load_sample_button.image, (self.load_sample_button.rect.x, self.load_sample_button.rect.y))
+    self.screen.blit(self.generate_button.image, (self.generate_button.rect.x, self.generate_button.rect.y))
     self.screen.blit(self.load_kick_button.image, (self.load_kick_button.rect.x, self.load_kick_button.rect.y))
     self.screen.blit(self.load_snare_button.image, (self.load_snare_button.rect.x, self.load_snare_button.rect.y))
     self.screen.blit(self.load_hat_button.image, (self.load_hat_button.rect.x, self.load_hat_button.rect.y))
     pygame.display.flip()
+
+  def generate(self):
+    print('run beat generation with the following:')
+    print(self.input_sample_name)
+    print(self.kick_sample_name)
+    print(self.snare_sample_name)
+    print(self.hat_sample_name)
+    print([dsb.on for dsb in self.drum_seq_buttons])
+    drum_sequence = [dsb.on for dsb in self.drum_seq_buttons]
+    gabi_run(self.input_sample_name, self.kick_sample_name, self.snare_sample_name, self.hat_sample_name, drum_sequence)
   
   # 'main' loop:
   def run(self):

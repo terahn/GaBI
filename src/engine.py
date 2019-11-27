@@ -3,9 +3,9 @@ import librosa, librosa.display
 import soundfile as sf
 from placements import kick_placements, snare_placements, hat_placements
 
-def gabi_run(input_file, drum_pack):
+def gabi_run(input_file, kick_name, snare_name, hat_name, drum_sequence):
     # load samples
-    sample, kick, snare, hat, srate = load_samples(input_file, drum_pack)
+    sample, kick, snare, hat, srate = load_samples(input_file, kick_name, snare_name, hat_name)
 
     # perform beat tracking
     tempo, drum_indices = beat_track(sample, srate)
@@ -17,9 +17,9 @@ def gabi_run(input_file, drum_pack):
     quarters = subdivide(drum_indices)
 
     # calculate drum placements
-    kick_indices = kick_placements(quarters)
-    snare_indices = snare_placements(quarters)
-    hat_indices = hat_placements(quarters)
+    kick_indices = kick_placements(quarters, drum_sequence[16:])
+    snare_indices = snare_placements(quarters, drum_sequence[8:16])
+    hat_indices = hat_placements(quarters, drum_sequence[:8])
 
     # drum volumes
     kick_volume = 0.6
@@ -35,21 +35,21 @@ def gabi_run(input_file, drum_pack):
     sample = (0.5 / max(sample)) * sample 
     output = sample + (kick_volume * kick_track) + (snare_volume * snare_track) + (hat_volume * hat_track)
     
-    output_file_name = input_file + '-output.wav'
-    sf.write('../../output/' + output_file_name, sample + output, srate, 'PCM_24')
+    output_file_name = 'frontend-output.wav'
+    sf.write('../output/' + output_file_name, sample + output, srate, 'PCM_24')
     print('Output file ' + output_file_name + ' can be found in the output folder')
 
 # load the the input and drum samples
 # Input:
 # sample_name: string - the name of the input file
 # drum_pack: int - a number corresponding to a set of drum samples (ex. kick1, snare1, hat1)
-def load_samples(sample_name, drum_pack):
-    x, srate = librosa.load('../../samples/' + sample_name + '.wav')
+def load_samples(sample_name, kick_name, snare_name, hat_name):
+    x, srate = librosa.load(sample_name)
 
     # load drum samples
-    kick, sr = librosa.load('../../samples/drums/kicks/kick{0}.wav'.format(drum_pack))
-    snare, sr = librosa.load('../../samples/drums/snares/snare{0}.wav'.format(drum_pack))
-    hat, sr = librosa.load('../../samples/drums/hats/hat{0}.wav'.format(drum_pack))
+    kick, sr = librosa.load(kick_name)
+    snare, sr = librosa.load(snare_name)
+    hat, sr = librosa.load(hat_name)
 
     return x, kick, snare, hat, srate
 
@@ -67,9 +67,9 @@ def beat_track(sample, sr=44100):
 # drum_indices: list of detected beat indices
 def heuristics(tempo, drum_indices):
     new_indices = []
-    # if tempo > 125, half speed it (maybe a good idea?)
-    # if tempo > 125:
-    #     drum_indices = [value for (i, value) in enumerate(drum_indices) if i % 2 == 0]
+    #if tempo > 125, half speed it (maybe a good idea?)
+    if tempo > 125:
+        drum_indices = [value for (i, value) in enumerate(drum_indices) if i % 2 == 0]
 
     if tempo < 60:
         for i in range(len(drum_indices) - 1):
@@ -110,5 +110,3 @@ def create_drum_track(x, drum_sample, placements):
         except:
             continue
     return track
-
-gabi_run('test', 2)
