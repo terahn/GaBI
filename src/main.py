@@ -97,7 +97,7 @@ class Interface:
     self.short_blip = SFX3
     
     # input
-    self.audio_thing = audio_input()
+    #self.audio_thing = audio_input()
     self.output_freq = 0
     # ------- Tkinter?
     
