@@ -139,10 +139,19 @@ class Interface:
       # mouse events
       elif event.type == CLICK_HOLD:
         
-        for dsb in self.drum_seq_buttons:
+        for (index, dsb) in enumerate(self.drum_seq_buttons):
           if dsb.rect.collidepoint((x,y)):
             print("button toggled")
             if not dsb.on:
+              try:
+                if index < 8:
+                  self.hat_sound.play()
+                elif index >= 8 and index < 16:
+                  self.snare_sound.play()
+                else:
+                  self.kick_sound.play()
+              except:
+                print('Sample not loaded yet')
               dsb.image.blit(dsb.sheet, ( 0 - 1*DPAT_B_WIDTH, 0 - 0*DPAT_B_HEIGHT ) )
               dsb.on = True
             else:
@@ -156,16 +165,28 @@ class Interface:
         if self.load_kick_button.rect.collidepoint((x,y)):
           #self.load_kick_button.blit
           self.kick_sample_name = self.OpenFile()
+          try:
+            self.kick_sound = pygame.mixer.Sound(self.kick_sample_name)
+          except:
+            print('file cannot be 32 bits per sample')
           self.load_kick_button.image.blit(self.load_kick_button.sheet, (0, 0-65))
           print(self.kick_sample_name)
         if self.load_snare_button.rect.collidepoint((x,y)):
           #self.load_snare_button.blit
           self.snare_sample_name = self.OpenFile()
+          try:
+            self.snare_sound = pygame.mixer.Sound(self.snare_sample_name)
+          except:
+            print('file cannot be 32 bits per sample')
           self.load_snare_button.image.blit(self.load_snare_button.sheet, (0, 0-65))
           print(self.snare_sample_name)
         if self.load_hat_button.rect.collidepoint((x,y)):
           #self.load_hat_button.blit
           self.hat_sample_name = self.OpenFile()
+          try:
+            self.hat_sound = pygame.mixer.Sound(self.hat_sample_name)
+          except:
+            print('file cannot be 32 bits per sample')
           self.load_hat_button.image.blit(self.load_hat_button.sheet, (0, 0-65))
           print(self.hat_sample_name)
 
