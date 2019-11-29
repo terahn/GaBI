@@ -152,24 +152,20 @@ class Interface:
           #self.load_sample_button.blit
           self.input_sample_name = self.OpenFile()
           self.load_sample_button.image.blit(self.load_sample_button.sheet, (0, 0-65))
-          self.sample_loaded = True
           print(self.input_sample_name)
         if self.load_kick_button.rect.collidepoint((x,y)):
           #self.load_kick_button.blit
           self.kick_sample_name = self.OpenFile()
-          self.kick_loaded = True
           self.load_kick_button.image.blit(self.load_kick_button.sheet, (0, 0-65))
           print(self.kick_sample_name)
         if self.load_snare_button.rect.collidepoint((x,y)):
           #self.load_snare_button.blit
           self.snare_sample_name = self.OpenFile()
-          self.snare_loaded = True
           self.load_snare_button.image.blit(self.load_snare_button.sheet, (0, 0-65))
           print(self.snare_sample_name)
         if self.load_hat_button.rect.collidepoint((x,y)):
           #self.load_hat_button.blit
           self.hat_sample_name = self.OpenFile()
-          self.hat_loaded = True
           self.load_hat_button.image.blit(self.load_hat_button.sheet, (0, 0-65))
           print(self.hat_sample_name)
 
