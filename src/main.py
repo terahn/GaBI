@@ -44,7 +44,7 @@ class PressButton(pygame.sprite.Sprite):
     self.sheet = ICONIMAGES
     self.image = pygame.Surface( (width, height), pygame.SRCALPHA )
     self.rect = self.image.get_rect()
-    self.image.blit(self.sheet, (0, 0-65))
+    self.image.blit(self.sheet, (0-90, 0-65))
     self.rect.x = x
     self.rect.y = y
     self.pressed = False
@@ -67,7 +67,6 @@ class Interface:
     self.kick_sample_name = '../samples/drums/kicks/kick1.wav'
     self.snare_sample_name = '../samples/drums/snares/snare1.wav'
     self.hat_sample_name = '../samples/drums/hats/hat1.wav'
-
     
     self.doubleClickCount = 0
     self.setDoubleClick = False
@@ -83,11 +82,11 @@ class Interface:
       kick_button = ToggleButton(DPAT_B_WIDTH, DPAT_B_HEIGHT, 380+(b*(DPAT_B_WIDTH+5)), 220)
       self.drum_seq_buttons.append(kick_button)
     
-    self.load_snare_button = PressButton(60, 60, 115, 350)
-    self.load_kick_button = PressButton(60, 60, 10, 350)
-    self.load_hat_button = PressButton(60, 60, 225, 350)
-    self.load_sample_button = PressButton(60, 60, 20, 70)
-    self.generate_button = PressButton(60, 60, 350, 370)
+    self.load_snare_button = PressButton(80, 95, 110, 350)
+    self.load_kick_button = PressButton(80, 95, 5, 350)
+    self.load_hat_button = PressButton(80, 95, 217, 350)
+    self.load_sample_button = PressButton(80, 95, 20, 70)
+    self.generate_button = PressButton(80, 95, 350, 370)
     
     # ------- audio stuff ------
     # output
@@ -152,18 +151,26 @@ class Interface:
         if self.load_sample_button.rect.collidepoint((x,y)):
           #self.load_sample_button.blit
           self.input_sample_name = self.OpenFile()
+          self.load_sample_button.image.blit(self.load_sample_button.sheet, (0, 0-65))
+          self.sample_loaded = True
           print(self.input_sample_name)
         if self.load_kick_button.rect.collidepoint((x,y)):
           #self.load_kick_button.blit
           self.kick_sample_name = self.OpenFile()
+          self.kick_loaded = True
+          self.load_kick_button.image.blit(self.load_kick_button.sheet, (0, 0-65))
           print(self.kick_sample_name)
         if self.load_snare_button.rect.collidepoint((x,y)):
           #self.load_snare_button.blit
           self.snare_sample_name = self.OpenFile()
+          self.snare_loaded = True
+          self.load_snare_button.image.blit(self.load_snare_button.sheet, (0, 0-65))
           print(self.snare_sample_name)
         if self.load_hat_button.rect.collidepoint((x,y)):
           #self.load_hat_button.blit
           self.hat_sample_name = self.OpenFile()
+          self.hat_loaded = True
+          self.load_hat_button.image.blit(self.load_hat_button.sheet, (0, 0-65))
           print(self.hat_sample_name)
 
         # generate button clicked
