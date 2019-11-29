@@ -36,7 +36,7 @@ def gabi_run(input_file, kick_name, snare_name, hat_name, drum_sequence):
     output = sample + (kick_volume * kick_track) + (snare_volume * snare_track) + (hat_volume * hat_track)
     
     output_file_name = 'frontend-output.wav'
-    sf.write('../output/' + output_file_name, sample + output, srate, 'PCM_24')
+    sf.write('../output/' + output_file_name, sample + output, srate, 'PCM_16')
     print('Output file ' + output_file_name + ' can be found in the output folder')
 
 # load the the input and drum samples
