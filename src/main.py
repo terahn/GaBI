@@ -40,11 +40,11 @@ class ToggleButton(pygame.sprite.Sprite):
 
 # circular button/sprite?
 class PressButton(pygame.sprite.Sprite):
-  def __init__(self, width, height, x, y):
+  def __init__(self, width, height, x, y, offset_x, offset_y):
     self.sheet = ICONIMAGES
     self.image = pygame.Surface( (width, height), pygame.SRCALPHA )
     self.rect = self.image.get_rect()
-    self.image.blit(self.sheet, (0-90, 0-65))
+    self.image.blit(self.sheet, (offset_x, offset_y))
     self.rect.x = x
     self.rect.y = y
     self.pressed = False
@@ -67,6 +67,10 @@ class Interface:
     self.kick_sample_name = '../samples/drums/kicks/kick1.wav'
     self.snare_sample_name = '../samples/drums/snares/snare1.wav'
     self.hat_sample_name = '../samples/drums/hats/hat1.wav'
+    self.output_name = '../output/frontend-output.wav'
+
+    self.output_loaded = False
+    self.playing_output = False
     
     self.doubleClickCount = 0
     self.setDoubleClick = False
@@ -82,11 +86,12 @@ class Interface:
       kick_button = ToggleButton(DPAT_B_WIDTH, DPAT_B_HEIGHT, 380+(b*(DPAT_B_WIDTH+5)), 220)
       self.drum_seq_buttons.append(kick_button)
     
-    self.load_snare_button = PressButton(80, 95, 110, 350)
-    self.load_kick_button = PressButton(80, 95, 5, 350)
-    self.load_hat_button = PressButton(80, 95, 217, 350)
-    self.load_sample_button = PressButton(80, 95, 20, 70)
-    self.generate_button = PressButton(80, 95, 350, 370)
+    self.load_snare_button = PressButton(80, 95, 110, 350, 0-90, 0-65)
+    self.load_kick_button = PressButton(80, 95, 5, 350, 0-90, 0-65)
+    self.load_hat_button = PressButton(80, 95, 217, 350, 0-90, 0-65)
+    self.load_sample_button = PressButton(80, 95, 20, 70, 0-90, 0-65)
+    self.generate_button = PressButton(80, 95, 350, 370, 0, 0-162)
+    self.playback_button = PressButton(80, 95, 460, 370, 0-180, 0-162)
     
     # ------- audio stuff ------
     # output
@@ -120,7 +125,6 @@ class Interface:
     x, y = pygame.mouse.get_pos()
     
     for event in pygame.event.get():
-      
       if event.type == pygame.QUIT:
         print("quitting")
         pygame.quit()
@@ -194,6 +198,19 @@ class Interface:
         if self.generate_button.rect.collidepoint((x,y)):
           self.generate()
         
+        # play button clicked
+        if self.playback_button.rect.collidepoint((x,y)) and self.output_loaded:
+          if self.playing_output == False:
+            print('Play')
+            self.playback_button.image.blit(self.playback_button.sheet, (0-90, 0-162))
+            self.output_file.play()
+            self.playing_output = True
+          else:
+            print('Stop')
+            self.playback_button.image.blit(self.playback_button.sheet, (0-180, 0-65))
+            self.output_file.stop()
+            self.playing_output = False
+        
         if not self.setDoubleClick:
           self.setDoubleClick = True
           
@@ -244,6 +261,8 @@ class Interface:
     self.screen.blit(self.load_kick_button.image, (self.load_kick_button.rect.x, self.load_kick_button.rect.y))
     self.screen.blit(self.load_snare_button.image, (self.load_snare_button.rect.x, self.load_snare_button.rect.y))
     self.screen.blit(self.load_hat_button.image, (self.load_hat_button.rect.x, self.load_hat_button.rect.y))
+    self.screen.blit(self.playback_button.image, (self.playback_button.rect.x, self.playback_button.rect.y))
+
     pygame.display.flip()
 
   def generate(self):
@@ -255,6 +274,10 @@ class Interface:
     print([dsb.on for dsb in self.drum_seq_buttons])
     drum_sequence = [dsb.on for dsb in self.drum_seq_buttons]
     gabi_run(self.input_sample_name, self.kick_sample_name, self.snare_sample_name, self.hat_sample_name, drum_sequence)
+    self.output_file = pygame.mixer.Sound(self.output_name)
+    self.playback_button.image.blit(self.playback_button.sheet, (0-180, 0-65))
+    self.output_loaded = True
+
   
   # 'main' loop:
   def run(self):
