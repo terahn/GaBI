@@ -17,9 +17,9 @@ def gabi_run(input_file, kick_name, snare_name, hat_name, drum_sequence):
     quarters = subdivide(drum_indices)
 
     # calculate drum placements
-    kick_indices = kick_placements(quarters, drum_sequence[16:])
-    snare_indices = snare_placements(quarters, drum_sequence[8:16])
-    hat_indices = hat_placements(quarters, drum_sequence[:8])
+    kick_indices = kick_placements(quarters, drum_sequence[32:])
+    snare_indices = snare_placements(quarters, drum_sequence[16:32])
+    hat_indices = hat_placements(quarters, drum_sequence[:16])
 
     # drum volumes
     kick_volume = 0.6

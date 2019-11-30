@@ -59,7 +59,7 @@ class Interface:
     self.running = True
     self.framecount = 0
     self.background = BACKGROUND
-    self.image = pygame.Surface( (768, 512), pygame.SRCALPHA )
+    self.image = pygame.Surface( (790, 512), pygame.SRCALPHA )
     self.image.blit(self.background, ( 0,0 ) )
 
     # placeholders
@@ -76,13 +76,13 @@ class Interface:
     self.setDoubleClick = False
     
     self.drum_seq_buttons = []
-    for b in range(8):
+    for b in range(16):
       hihat_button = ToggleButton(DPAT_B_WIDTH, DPAT_B_HEIGHT, 380+(b*(DPAT_B_WIDTH+5)), 80)
       self.drum_seq_buttons.append(hihat_button)
-    for b in range(8):
+    for b in range(16):
       snare_button = ToggleButton(DPAT_B_WIDTH, DPAT_B_HEIGHT, 380+(b*(DPAT_B_WIDTH+5)), 150)
       self.drum_seq_buttons.append(snare_button)
-    for b in range(8):
+    for b in range(16):
       kick_button = ToggleButton(DPAT_B_WIDTH, DPAT_B_HEIGHT, 380+(b*(DPAT_B_WIDTH+5)), 220)
       self.drum_seq_buttons.append(kick_button)
     
@@ -148,15 +148,15 @@ class Interface:
             print("button toggled")
             if not dsb.on:
               try:
-                if index < 8:
+                if index < 16:
                   self.hat_sound.play()
-                elif index >= 8 and index < 16:
+                elif index >= 16 and index < 32:
                   self.snare_sound.play()
                 else:
                   self.kick_sound.play()
               except:
                 print('Sample not loaded yet')
-              dsb.image.blit(dsb.sheet, ( 0 - 1*DPAT_B_WIDTH, 0 - 0*DPAT_B_HEIGHT ) )
+              dsb.image.blit(dsb.sheet, ( 0 - 1*DPAT_B_WIDTH - 20, 0 - 0*DPAT_B_HEIGHT ) )
               dsb.on = True
             else:
               dsb.image.blit(dsb.sheet, ( 0 - 0*DPAT_B_WIDTH, 0 - 0*DPAT_B_HEIGHT ) )
@@ -196,6 +196,7 @@ class Interface:
 
         # generate button clicked
         if self.generate_button.rect.collidepoint((x,y)):
+          self.playback_button.image.blit(self.playback_button.sheet, (0-180, 0-162))
           self.generate()
         
         # play button clicked
