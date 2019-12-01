@@ -23,8 +23,8 @@ def gabi_run(input_file, kick_name, snare_name, hat_name, drum_sequence):
 
     # drum volumes
     kick_volume = 0.6
-    snare_volume = 1.0
-    hat_volume = 0.5
+    snare_volume = 0.5
+    hat_volume = 0.3
 
     kick_track = create_drum_track(sample, kick, kick_indices)
     snare_track = create_drum_track(sample, snare, snare_indices)
@@ -33,10 +33,10 @@ def gabi_run(input_file, kick_name, snare_name, hat_name, drum_sequence):
     sample = sample.astype(np.float32) / 32767.0 
     # reduce values of sample to prevent clipping
     sample = (0.5 / max(sample)) * sample 
-    output = sample + (kick_volume * kick_track) + (snare_volume * snare_track) + (hat_volume * hat_track)
-    
+    output =  sample + (kick_volume * kick_track) + (snare_volume * snare_track) + (hat_volume * hat_track)
+    output = np.hstack((output, output))
     output_file_name = 'frontend-output.wav'
-    sf.write('../output/' + output_file_name, sample + output, srate, 'PCM_16')
+    sf.write('../output/' + output_file_name, output, srate, 'PCM_16')
     print('Output file ' + output_file_name + ' can be found in the output folder')
 
 # load the the input and drum samples
@@ -68,7 +68,7 @@ def beat_track(sample, sr=44100):
 def heuristics(tempo, drum_indices):
     new_indices = []
     #if tempo > 125, half speed it (maybe a good idea?)
-    if tempo > 125:
+    if tempo > 145:
         drum_indices = [value for (i, value) in enumerate(drum_indices) if i % 2 == 0]
 
     if tempo < 60:
