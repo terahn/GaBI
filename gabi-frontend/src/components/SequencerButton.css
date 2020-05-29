@@ -1,0 +1,14 @@
+.seq-button {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    grid-row: 1;
+}
+
+.on {
+    background-color: #41FF74;
+}
+
+.off {
+    background-color: #1F7738;
+}

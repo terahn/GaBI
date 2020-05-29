@@ -1,0 +1,14 @@
+.seq-row {
+    display: grid;
+    grid-template-rows: 100px;
+    grid-template-columns: 75px auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.rowName {
+    color: white;
+    font-size: larger;
+    font-weight: bold;
+    grid-row: 1;
+}
